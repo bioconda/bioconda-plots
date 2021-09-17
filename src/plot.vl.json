@@ -1,0 +1,10 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Google's stock price over time.",
+  "data": {"values": []},
+  "mark": "line",
+  "encoding": {
+    "x": {"field": "pos", "type": "quantitative"},
+    "y": {"field": "count", "type": "quantitative"}
+  }
+}
