@@ -23,9 +23,18 @@ for filename in os.listdir('bioconda-stats/package-downloads/anaconda.org/biocon
 max_downloads = max(downloads.values())
 data = [0] * max_downloads
 
-for i, (package, download_count) in enumerate(sorted(downloads.items(), key=lambda item: item[1])):
-    for i in range(download_count, max_downloads):
-        data[i] += 1
+for i in range(max_downloads):
+    if i == 0:
+        count = 0
+    else:
+        count = data[i - 1]
+    for package, download_count in sorted(downloads.items(), key=lambda item: item[1]):
+        if download_count <= i:
+            count += 1
+            del downloads[package]
+        else:
+            data[i] = count
+            break
 
 for (i, d) in enumerate(data):
     plot_data.append({"pos": i, "count": d})
