@@ -18,7 +18,7 @@ for filename in os.listdir('bioconda-stats/package-downloads/anaconda.org/biocon
     if filename.endswith(".json"):
         with open(f"bioconda-stats/package-downloads/anaconda.org/bioconda/{filename}", "r") as file:
             data = json.load(file)
-            downloads[filename.rstrip(".json")] = data["downloads_per_date"].pop()["total"]
+            downloads[filename[:-5]] = data["downloads_per_date"].pop()["total"]
 
 max_downloads = max(downloads.values())
 data = [0] * max_downloads
@@ -32,7 +32,7 @@ for i in range(max_downloads):
         if download_count <= i:
             count += 1
             if package == to_be_plotted:
-                plot_data.append({"package": to_be_plotted, "downloads": downloads[to_be_plotted], "count": i})
+                plot_data.append({"package": to_be_plotted, "downloads": i, "count": count})
             del downloads[package]
         else:
             data[i] = count
