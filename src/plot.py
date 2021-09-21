@@ -21,25 +21,25 @@ for filename in os.listdir('bioconda-stats/package-downloads/anaconda.org/biocon
             downloads[filename[:-5]] = data["downloads_per_date"].pop()["total"]
 
 max_downloads = max(downloads.values())
-data = [0] * max_downloads
+data = [0] * int((max_downloads/100))
 
-for i in range(max_downloads):
+for i in range(int(max_downloads/100)):
     if i == 0:
         count = 0
     else:
         count = data[i - 1]
     for package, download_count in sorted(downloads.items(), key=lambda item: item[1]):
-        if download_count <= i:
+        if download_count <= i*100:
             count += 1
             if package == to_be_plotted:
-                plot_data.append({"package": to_be_plotted, "downloads": i, "count": count})
+                plot_data.append({"package": to_be_plotted, "downloads": i*100, "count": count})
             del downloads[package]
         else:
             data[i] = count
             break
 
 for (i, d) in enumerate(data[1:], 1):
-    plot_data.append({"pos": i, "count": d})
+    plot_data.append({"pos": i*100, "count": d})
 
 with open("src/plot.vl.json", "r") as vl_specs:
     plot = json.load(vl_specs)
