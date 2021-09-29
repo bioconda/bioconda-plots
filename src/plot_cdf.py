@@ -1,18 +1,10 @@
+import copy
 import os
 import json
-import sys
-import argparse
-
-parser = argparse.ArgumentParser(description='Package to be plotted.')
-parser.add_argument('package', type=str,
-                    help='Package to be plotted over cdf of all packages')
-
-args = parser.parse_args()
-
-to_be_plotted = args.package
 
 downloads = {}
 plot_data = []
+packages = []
 
 for filename in os.listdir('bioconda-stats/package-downloads/anaconda.org/bioconda/'):
     if filename.endswith(".json"):
@@ -31,8 +23,7 @@ for i in range(int(max_downloads/100)):
     for package, download_count in sorted(downloads.items(), key=lambda item: item[1]):
         if download_count <= i*100:
             count += 1
-            if package == to_be_plotted:
-                plot_data.append({"package": to_be_plotted, "downloads": i*100, "count": count})
+            packages.append({"package": package, "downloads": i*100, "count": count})
             del downloads[package]
         else:
             data[i] = count
@@ -41,7 +32,16 @@ for i in range(int(max_downloads/100)):
 for (i, d) in enumerate(data[1:], 1):
     plot_data.append({"pos": i*100, "count": d})
 
-with open("src/plot.vl.json", "r") as vl_specs:
-    plot = json.load(vl_specs)
-    plot["data"]["values"] = plot_data
-    sys.stdout.write(json.dumps(plot))
+if not os.path.exists("plots"):
+    os.makedirs("plots")
+
+with open("src/cdf.vl.json", "r") as vl_specs:
+        plot = json.load(vl_specs)
+        for p in packages:
+            package = p["package"]
+            if not os.path.exists(f"plots/{package}"):
+                os.makedirs(f"plots/{package}")
+            plot["data"]["values"] = copy.deepcopy(plot_data)
+            plot["data"]["values"].append(p)
+            with open(f"plots/{package}/cdf.vl.json", "w") as cdf:
+                cdf.writelines(json.dumps(plot))

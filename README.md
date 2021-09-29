@@ -1,6 +1,2 @@
 # bioconda-plots
-Plotting bioconda package downloads over cdf of all packages
-
-## Usage
-
-`python src/plot.py your_package | vl2svg > plot.svg`
+Generating plots for the [bioconda homepage](https://bioconda.github.io/) via GitHub Actions using data from the [bioconda-stats repository](https://github.com/bioconda/bioconda-stats).

@@ -1,0 +1,37 @@
+{
+  "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+  "description":"A simple bar chart with embedded data.",
+  "data":{
+    "values":[]
+  },
+  "width":"container",
+  "mark":{
+    "type":"line",
+    "point":{
+      "filled":true
+    }
+  },
+  "encoding":{
+    "x":{
+      "field":"date",
+      "type":"temporal",
+      "timeUnit":"yearmonthdate",
+      "title":"date",
+      "axis":{
+        "labelAngle":-15
+      }
+    },
+    "y":{
+      "field":"delta",
+      "type":"quantitative",
+      "title":"downloads"
+    },
+    "color":{
+      "field":"version",
+      "type":"nominal"
+    },
+    "tooltip":{
+      "field":"delta"
+    }
+  }
+}
