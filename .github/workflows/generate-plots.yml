@@ -23,7 +23,7 @@ jobs:
         python-version: 3.9
         
     - name: Update submodule
-      run: git submodule update
+      run: git submodule update --remote --merge
       
     - name: Generate plots
       run: |
@@ -36,7 +36,7 @@ jobs:
         git config user.email github-actions@github.com
         git add -A ./plots
         git status
-        git commit -m 'Daily bioconda plot update'
+        git commit -m 'Daily bioconda plot and submodule update'
         
     - if: ${{ github.ref == 'refs/heads/main' }}
       name: Push changes
