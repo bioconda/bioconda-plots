@@ -36,7 +36,7 @@ jobs:
         git config user.email github-actions@github.com
         git add -A ./plots
         git status
-        git commit -m 'Daily bioconda plot and submodule update'
+        git commit -m 'Update bioconda plots and submodule'
         
     - if: ${{ github.ref == 'refs/heads/main' }}
       name: Push changes
