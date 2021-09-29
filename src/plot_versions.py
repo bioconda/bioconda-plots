@@ -26,8 +26,5 @@ for filename in os.listdir('bioconda-stats/package-downloads/anaconda.org/biocon
                     entry["version"] = version
                 values.extend(data[-14:])
 
-        with open("src/versions.vl.json", "r") as vl_specs:
-            plot = json.load(vl_specs)
-            plot["data"]["values"] = values
-            with open(f"plots/{package}/versions.vl.json", "w") as v:
-                v.writelines(json.dumps(plot))
+            with open(f"plots/{package}/versions.json", "w") as v:
+                v.writelines(json.dumps(values))
