@@ -23,7 +23,9 @@ jobs:
         python-version: 3.9
         
     - name: Update submodule
-      run: git submodule update --remote --merge
+      run: |
+        git pull --recurse-submodules
+        git submodule update --remote --recursive
       
     - name: Generate plots
       run: |
