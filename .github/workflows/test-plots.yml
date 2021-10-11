@@ -1,0 +1,25 @@
+name: Test bioconda plot generation
+
+on:
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+      
+    - name: Generate plots
+      run: |
+        python src/plot_cdf.py
+        python src/plot_versions.py
