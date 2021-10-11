@@ -35,11 +35,12 @@ for (i, d) in enumerate(data[1:], 1):
 if not os.path.exists("plots"):
     os.makedirs("plots")
 
+with open(f"plots/cdf.json", "w") as cdf:
+    cdf.writelines(json.dumps(plot_data))
+
 for p in packages:
     package = p["package"]
     if not os.path.exists(f"plots/{package}"):
         os.makedirs(f"plots/{package}")
-    plot = copy.deepcopy(plot_data)
-    plot.append(p)
     with open(f"plots/{package}/cdf.json", "w") as cdf:
-        cdf.writelines(json.dumps(plot))
+        cdf.writelines(json.dumps([p]))
