@@ -23,11 +23,13 @@ for filename in os.listdir('bioconda-stats/package-downloads/anaconda.org/biocon
         for version in versions[-7:]:
             with open(f"bioconda-stats/package-downloads/anaconda.org/bioconda/{package}/{version}.json", "r") as file:
                 data = json.load(file)
-                data = data["downloads_per_date"][-15:]
-                for i, entry in enumerate(data[-14:], 1):
+                data = data["downloads_per_date"]
+                days = min(len(data), 15)
+                data = data[-days:]
+                for i, entry in enumerate(data[-(days - 1):], 1):
                     entry["delta"] = entry["total"] - data[i - 1]["total"]
                     entry["version"] = version
-                values.extend(data[-14:])
+                values.extend(data[-(days - 1):])
 
             with open(f"plots/{package}/versions.json", "w") as v:
                 v.writelines(json.dumps(values))
