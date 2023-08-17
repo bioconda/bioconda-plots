@@ -24,7 +24,8 @@ jobs:
     - name: Update submodule
       run: |
         git pull --no-recurse-submodules
-        git submodule update
+        git submodule foreach git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+        git submodule update --remote --recursive
 
     - name: Generate plots
       run: |
