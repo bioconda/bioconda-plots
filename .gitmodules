@@ -1,3 +1,4 @@
 [submodule "bioconda-stats"]
 	path = bioconda-stats
 	url = https://github.com/bioconda/bioconda-stats
+	branch = data
