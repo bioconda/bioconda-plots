@@ -24,7 +24,7 @@ jobs:
     - name: Update submodule
       run: |
         git pull --no-recurse-submodules
-        git submodule update --remote --recursive
+        git submodule update
 
     - name: Generate plots
       run: |
