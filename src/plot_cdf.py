@@ -1,16 +1,12 @@
-from collections import defaultdict
 import json
 import os
 import pandas as pd
-
-def read_tsv(path):
-    return pd.read_csv(path, sep="\t", dtype=defaultdict(lambda: str, total=int))
 
 plot_data = []
 packages = []
 
 # Get most recent number of downloads for each package
-df = read_tsv("bioconda-stats/package-downloads/anaconda.org/bioconda/packages.tsv")
+df = pd.read_csv("bioconda-stats/package-downloads/anaconda.org/bioconda/packages.tsv", sep="\t")
 downloads = df.sort_values(by=['total'])
 downloads = downloads.set_index("package")
 downloads = downloads.to_dict('dict')
@@ -18,7 +14,6 @@ downloads = downloads.to_dict('dict')
 # init array with number of items equal to highest number of downloads of any given package divided by 100
 max_downloads = df["total"].max()
 data = [0] * int((max_downloads/100))
-
 
 # For each of these buckets, count and collect the packages with downloads <= to the bucket range (1/100th of the max downloads)
 for i in range(int(max_downloads/100)):
