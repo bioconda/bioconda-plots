@@ -2,10 +2,10 @@ import io
 import os
 import pandas as pd
 from git import Repo
-from logging import DEBUG, basicConfig, getLogger
+from logging import INFO, basicConfig, getLogger
 
 
-basicConfig(level=DEBUG)
+basicConfig(level=INFO)
 logger = getLogger(__name__)
 
 if not os.path.exists("plots"):
@@ -21,7 +21,7 @@ for filename in os.listdir(
     if filename.endswith(".tsv"):
         package = filename[:-4]
         try:
-            logger.info(f"Loading data for package: {package}")
+            logger.debug(f"Loading data for package: {package}")
             package_df = pd.DataFrame()
             tagref = None
 
