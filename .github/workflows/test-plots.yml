@@ -21,5 +21,6 @@ jobs:
 
     - name: Generate plots
       run: |
+        pip install GitPython pandas
         python src/plot_cdf.py
         python src/plot_versions.py
