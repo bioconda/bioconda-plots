@@ -1,12 +1,22 @@
 import io
 import os
 import pandas as pd
+import sys
 from git import Repo
 from logging import INFO, basicConfig, getLogger
 
 
 basicConfig(level=INFO)
 logger = getLogger(__name__)
+
+days_to_plot = 15
+if len(sys.argv) > 1 and sys.argv[1]:
+    # Add 1 to get the delta for the last date
+    days_to_plot = int(sys.argv[1]) + 1
+
+max_packages = None
+if len(sys.argv) > 2 and sys.argv[2]:
+    max_packages = int(sys.argv[2])
 
 if not os.path.exists("plots"):
     os.makedirs("plots")
@@ -15,6 +25,8 @@ repo = Repo("bioconda-stats")
 tags = repo.tags
 
 # for each package, get the most recent versions.tsv
+package_count = 0
+error_count = 0
 for filename in os.listdir(
     "bioconda-stats/package-downloads/anaconda.org/bioconda/versions"
 ):
@@ -29,8 +41,8 @@ for filename in os.listdir(
             versions = set(df["version"])
             prev_tagname = tags[len(tags) - 1].name
 
-            # Get tags going back 15 days
-            for days_back in range(1, 15):
+            # Get tags going back 15 days (or as specified in arg)
+            for days_back in range(1, days_to_plot):
                 if tagref is not None:
                     prev_tagname = tagref.name
                 tagref = tags[len(tags) - 1 - days_back]
@@ -76,6 +88,16 @@ for filename in os.listdir(
 
         except Exception as e:
             # Log package name and continue with the rest
+            error_count += 1
             e.args = (f"Error creating plot for {package}.",) + e.args
             logger.exception(e)
 
+        finally:
+            package_count += 1
+            if max_packages and package_count == max_packages:
+                break
+
+if error_count > 0:
+    raise RuntimeError(f"Errors occurred for {error_count} out of {max_packages} packages.")
+else:
+    logger.info(f"Completed {max_packages} packages.")

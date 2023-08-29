@@ -23,4 +23,4 @@ jobs:
       run: |
         pip install GitPython pandas
         python src/plot_cdf.py
-        python src/plot_versions.py
+        python src/plot_versions.py 5 100
