@@ -98,6 +98,6 @@ for filename in os.listdir(
                 break
 
 if error_count > 0:
-    raise RuntimeError(f"Errors occurred for {error_count} out of {max_packages} packages.")
+    raise RuntimeError(f"Errors occurred for {error_count} out of {package_count} packages.")
 else:
-    logger.info(f"Completed {max_packages} packages.")
+    logger.info(f"Completed {package_count} packages.")
