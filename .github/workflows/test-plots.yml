@@ -19,7 +19,12 @@ jobs:
       with:
         python-version: 3.9
 
+    - name: Fetch submodule tags
+      run: |
+        git submodule foreach git fetch --tags
+
     - name: Generate plots
       run: |
+        pip install GitPython pandas
         python src/plot_cdf.py
-        python src/plot_versions.py
+        python src/plot_versions.py 5 100
