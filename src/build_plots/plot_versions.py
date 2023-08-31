@@ -2,7 +2,6 @@ import io
 import os
 import pandas as pd
 import sys
-from collections import defaultdict
 from git import Repo
 from logging import INFO, basicConfig, getLogger
 from ._vendor.conda.models.version import VersionOrder
