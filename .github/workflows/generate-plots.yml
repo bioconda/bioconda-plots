@@ -31,8 +31,9 @@ jobs:
     - name: Generate plots
       run: |
         pip install GitPython pandas
-        python src/plot_cdf.py
-        python src/plot_versions.py
+        export PYTHONPATH="$( pwd )/src"
+        python -m build_plots.plot_cdf
+        python -m build_plots.plot_versions
 
     - name: Add changes, commit
       run: |
