@@ -2,8 +2,10 @@ import io
 import os
 import pandas as pd
 import sys
+from collections import defaultdict
 from git import Repo
 from logging import INFO, basicConfig, getLogger
+from ._vendor.conda.models.version import VersionOrder
 
 
 basicConfig(level=INFO)
@@ -37,7 +39,12 @@ for filename in os.listdir(
             package_df = pd.DataFrame()
             tagref = None
 
-            df = pd.read_csv(f"bioconda-stats/package-downloads/anaconda.org/bioconda/versions/{filename}", encoding="utf-8", sep="\t")
+            df = pd.read_csv(
+                f"bioconda-stats/package-downloads/anaconda.org/bioconda/versions/{filename}",
+                dtype={ "version": str, "total": int },
+                encoding="utf-8",
+                sep="\t",
+            )
             versions = set(df["version"])
             prev_tagname = tags[len(tags) - 1].name
 
@@ -47,7 +54,8 @@ for filename in os.listdir(
                     prev_tagname = tagref.name
                 tagref = tags[len(tags) - 1 - days_back]
                 subtree = (
-                    tagref.commit.tree / "package-downloads/anaconda.org/bioconda/versions"
+                    tagref.commit.tree
+                    / "package-downloads/anaconda.org/bioconda/versions"
                 )
 
                 # Get a previous tagged version of the package stats tsv
@@ -59,11 +67,16 @@ for filename in os.listdir(
 
                 logger.debug(f"Found data for {package} from date {tagref.name}.")
                 new_df = pd.read_csv(
-                    io.BytesIO(blob.data_stream.read()), encoding="utf-8", sep="\t"
+                    io.BytesIO(blob.data_stream.read()),
+                    dtype={ "version": str, "total": int },
+                    encoding="utf-8",
+                    sep="\t"
                 )
                 # do a delta between totals of different dates
                 versions = versions | set(new_df["version"])
-                df_sub = df.set_index("version").subtract(new_df.set_index("version"), fill_value=0)
+                df_sub = df.set_index("version").subtract(
+                    new_df.set_index("version"), fill_value=0
+                )
                 df_sub.rename(columns={"total": "delta"}, inplace=True)
                 df = df.merge(df_sub, on="version")
                 df["date"] = prev_tagname
@@ -71,13 +84,14 @@ for filename in os.listdir(
                 df = new_df
 
             if len(package_df.index) > 0:
-                # Sort by version (for semantic versioning)
-                versions = list(versions)
-                if all([all(list(map(lambda x: x.isdigit(), str(v).split(".")))) for v in versions]):
-                    versions.sort(key=lambda s: list(map(int, str(s).split("."))))
-                
-                package_df["version"] = pd.Categorical(package_df["version"], ordered=True, categories=versions)
-                package_df = package_df.sort_values(by=["version","date"])[["date", "total", "delta", "version"]]
+                # Get 7 most recent versions, sorting by VersionOrder
+                version_list = sorted(list(versions), key=VersionOrder)[-7:]
+                package_df["version"] = pd.Categorical(
+                    package_df["version"], ordered=True, categories=version_list
+                )
+                package_df = package_df[package_df["version"].notna()].sort_values(
+                    by=["version", "date"]
+                )[["date", "total", "delta", "version"]]
 
                 # Save plot data
                 if not os.path.exists(f"plots/{package}"):
@@ -98,6 +112,8 @@ for filename in os.listdir(
                 break
 
 if error_count > 0:
-    raise RuntimeError(f"Errors occurred for {error_count} out of {package_count} packages.")
+    raise RuntimeError(
+        f"Errors occurred for {error_count} out of {package_count} packages."
+    )
 else:
     logger.info(f"Completed {package_count} packages.")

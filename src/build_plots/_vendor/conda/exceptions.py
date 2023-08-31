@@ -1,0 +1,1 @@
+InvalidVersionSpec = ValueError
