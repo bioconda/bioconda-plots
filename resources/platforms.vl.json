@@ -1,21 +1,16 @@
 {
   "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Downloads by Version",
-  "description": "Downloads of various versions of a bioconda package.",
+  "title": "Downloads by Platform",
+  "description": "Downloads of platforms of a bioconda package.",
   "data":{
     "values":[]
   },
   "width":"container",
-  "mark":{
-    "type":"line",
-    "point":{
-      "filled":true
-    }
-  },
+  "mark": "bar",
   "encoding":{
     "x":{
       "field":"date",
-      "type":"temporal",
+      "type":"ordinal",
       "timeUnit":"yearmonthdate",
       "title":"date",
       "axis":{
@@ -28,8 +23,13 @@
       "title":"downloads"
     },
     "color":{
-      "field":"version",
-      "type":"nominal"
+      "field":"subdir",
+      "title": "platform",
+      "type":"nominal",
+      "scale":{
+        "scheme": "paired",
+        "domain": ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "noarch"]
+      }
     },
     "tooltip":{
       "field":"delta"
