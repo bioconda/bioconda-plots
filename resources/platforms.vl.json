@@ -10,7 +10,7 @@
   "encoding":{
     "x":{
       "field":"date",
-      "type":"temporal",
+      "type":"ordinal",
       "timeUnit":"yearmonthdate",
       "title":"date",
       "axis":{
