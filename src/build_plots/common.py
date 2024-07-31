@@ -10,7 +10,7 @@ basicConfig(level=INFO)
 logger = getLogger(__name__)
 
 
-def buildDailyPlot(category, max_packages, days_to_plot):
+def buildDailyPlot(category, field, max_packages, days_to_plot):
     if not os.path.exists("plots"):
         os.makedirs("plots")
 
@@ -32,11 +32,11 @@ def buildDailyPlot(category, max_packages, days_to_plot):
 
                 df = pd.read_csv(
                     f"bioconda-stats/package-downloads/anaconda.org/bioconda/{category}/{filename}",
-                    dtype={ category: str, "total": int },
+                    dtype={ field: str, "total": int },
                     encoding="utf-8",
                     sep="\t",
                 )
-                versions = set(df[category])
+                versions = set(df[field])
                 prev_tagname = tags[len(tags) - 1].name
 
                 # Get tags going back 15 days (or as specified in arg)
@@ -59,17 +59,17 @@ def buildDailyPlot(category, max_packages, days_to_plot):
                     logger.debug(f"Found data for {package} from date {tagref.name}.")
                     new_df = pd.read_csv(
                         io.BytesIO(blob.data_stream.read()),
-                        dtype={ category: str, "total": int },
+                        dtype={ field: str, "total": int },
                         encoding="utf-8",
                         sep="\t"
                     )
                     # do a delta between totals of different dates
-                    versions = versions | set(new_df[category])
-                    df_sub = df.set_index(category).subtract(
-                        new_df.set_index(category), fill_value=0
+                    versions = versions | set(new_df[field])
+                    df_sub = df.set_index(field).subtract(
+                        new_df.set_index(field), fill_value=0
                     )
                     df_sub.rename(columns={"total": "delta"}, inplace=True)
-                    df = df.merge(df_sub, on=category)
+                    df = df.merge(df_sub, on=field)
                     df["date"] = prev_tagname
                     package_df = pd.concat([package_df, df], ignore_index=True)
                     df = new_df
@@ -79,12 +79,12 @@ def buildDailyPlot(category, max_packages, days_to_plot):
                     # Get 7 most recent versions, sorting by VersionOrder
                     if category == "versions":
                         version_list = sorted(version_list, key=VersionOrder)[-7:]
-                    package_df[category] = pd.Categorical(
-                        package_df[category], ordered=True, categories=version_list
+                    package_df[field] = pd.Categorical(
+                        package_df[field], ordered=True, categories=version_list
                     )
-                    package_df = package_df[package_df[category].notna()].sort_values(
-                        by=[category, "date"]
-                    )[["date", "total", "delta", category]]
+                    package_df = package_df[package_df[field].notna()].sort_values(
+                        by=[field, "date"]
+                    )[["date", "total", "delta", field]]
 
                     # Save plot data
                     if not os.path.exists(f"plots/{package}"):
