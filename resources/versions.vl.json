@@ -1,5 +1,6 @@
 {
   "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Downloads by Version",
   "description": "Downloads of various versions of a bioconda package.",
   "data":{
     "values":[]
