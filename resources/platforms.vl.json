@@ -1,0 +1,33 @@
+{
+  "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Downloads by Platform",
+  "description": "Downloads of platforms of a bioconda package.",
+  "data":{
+    "values":[]
+  },
+  "width":"container",
+  "mark": "bar",
+  "encoding":{
+    "x":{
+      "field":"date",
+      "type":"temporal",
+      "timeUnit":"yearmonthdate",
+      "title":"date",
+      "axis":{
+        "labelAngle":-15
+      }
+    },
+    "y":{
+      "field":"delta",
+      "type":"quantitative",
+      "title":"downloads"
+    },
+    "color":{
+      "field":"platform",
+      "type":"nominal"
+    },
+    "tooltip":{
+      "field":"delta"
+    }
+  }
+}
