@@ -44,13 +44,13 @@ def buildDailyPlot(category, field, max_packages, days_to_plot):
                     if tagref is not None:
                         prev_tagname = tagref.name
                     tagref = tags[len(tags) - 1 - days_back]
-                    subtree = (
-                        tagref.commit.tree
-                        / f"package-downloads/anaconda.org/bioconda/{category}"
-                    )
 
                     # Get a previous tagged version of the package stats tsv
                     try:
+                        subtree = (
+                            tagref.commit.tree
+                            / f"package-downloads/anaconda.org/bioconda/{category}"
+                        )
                         blob = subtree / filename
                     except KeyError:
                         # does not exist
