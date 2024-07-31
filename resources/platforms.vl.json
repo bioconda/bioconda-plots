@@ -25,7 +25,11 @@
     "color":{
       "field":"subdir",
       "title": "platform",
-      "type":"nominal"
+      "type":"nominal",
+      "scale":{
+        "scheme": "paired",
+        "domain": ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "noarch"]
+      }
     },
     "tooltip":{
       "field":"delta"
