@@ -19,4 +19,4 @@ max_packages = None
 if len(sys.argv) > 2 and sys.argv[2]:
     max_packages = int(sys.argv[2])
 
-buildDailyPlot("versions", "version", max_packages, days_to_plot)
+buildDailyPlot("versions", "subdir", max_packages, days_to_plot)

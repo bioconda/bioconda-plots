@@ -23,7 +23,8 @@
       "title":"downloads"
     },
     "color":{
-      "field":"platform",
+      "field":"subdir",
+      "title": "platform",
       "type":"nominal"
     },
     "tooltip":{
